@@ -9,13 +9,25 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RandomDataTest {
-    private Map<String, Object> testContainer;
+    private VariableStorage testContainer;
     private RandomData randomData;
 
     @BeforeEach
     public void clearStart() {
-        testContainer = new HashMap<>();
-        randomData = new RandomData(((key, value) -> testContainer.put(key, value)));
+        testContainer = new VariableStorage() {
+            private Map<String, Object> container = new HashMap<>();
+
+            @Override
+            public void put(String key, Object value) {
+                container.put(key, value);
+            }
+
+            @Override
+            public Object get(String key) {
+                return container.get(key);
+            }
+        };
+        randomData = new RandomData();
     }
 
     @Test

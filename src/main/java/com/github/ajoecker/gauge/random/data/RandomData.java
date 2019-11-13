@@ -15,29 +15,12 @@ public class RandomData {
     private VariableStorage variableStorage;
 
     public RandomData() {
-        this.variableStorage = initVariableStorage();
-        this.faker = initFaker();
+        this(VariableStorage.create());
     }
 
     public RandomData(VariableStorage variableStorage) {
         this.variableStorage = variableStorage;
         this.faker = initFaker();
-    }
-
-    private VariableStorage initVariableStorage() {
-        String clearStateLevel = System.getenv("gauge_clear_state_level");
-        if (Strings.isNullOrEmpty(clearStateLevel)) {
-            return ((key, value) -> getScenarioDataStore().put(key, value));
-        }
-        switch (clearStateLevel) {
-            case "suite":
-                return ((key, value) -> getSuiteDataStore().put(key, value));
-            case "spec":
-                return ((key, value) -> getSpecDataStore().put(key, value));
-            case "scenario":
-            default:
-                return ((key, value) -> getScenarioDataStore().put(key, value));
-        }
     }
 
     private Faker initFaker() {
