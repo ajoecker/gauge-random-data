@@ -1,11 +1,13 @@
 package com.github.ajoecker.gauge.random.data;
 
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RandomDataTest {
@@ -27,11 +29,11 @@ public class RandomDataTest {
                 return container.get(key);
             }
         };
-        randomData = new RandomData();
+        randomData = new RandomData(testContainer);
     }
 
     @Test
-    public void UniqueStringIsSaved() {
+    public void uniqueStringIsSaved() {
         randomData.createUniqueId("foobar");
         assertThat(testContainer.get("foobar")).isNotNull();
     }
@@ -70,5 +72,21 @@ public class RandomDataTest {
     public void setEmail() {
         randomData.setEmail("email");
         assertThat(testContainer.get("email")).isNotNull();
+    }
+
+    @Test
+    public void formatNumbers() {
+        randomData.createString("goo", "%d%d%d");
+        assertThat(parseInt(testContainer.get("goo").toString())).isBetween(100, 999);
+    }
+    @Test
+    public void formatLowercase() {
+        randomData.createString("goo", "%s%s");
+        assertThat(testContainer.get("goo").toString()).matches(i -> i.chars().allMatch(n -> n >= 97 && n <= 122), "all characters must be lowercase");
+    }
+    @Test
+    public void formatUppercase() {
+        randomData.createString("goo", "%S%S");
+        assertThat(testContainer.get("goo").toString()).matches(i -> i.chars().allMatch(n -> n >= 65 && n <= 90), "all characters must be uppercase");
     }
 }

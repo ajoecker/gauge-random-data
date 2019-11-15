@@ -2,10 +2,15 @@ package com.github.ajoecker.gauge.random.data;
 
 import com.github.javafaker.Faker;
 import com.google.common.base.Strings;
+import com.google.common.base.Supplier;
 import com.thoughtworks.gauge.Step;
+import org.apache.commons.lang3.RandomStringUtils;
 
+import java.security.interfaces.RSAKey;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.thoughtworks.gauge.datastore.DataStoreFactory.*;
 
@@ -27,6 +32,21 @@ public class RandomData {
         String localeEnv = System.getenv("gauge.data.locale");
         Locale locale = Strings.isNullOrEmpty(localeEnv) ? Locale.getDefault() : Locale.forLanguageTag(localeEnv);
         return new Faker(locale);
+    }
+
+    @Step("Create a string as <variable> in format <format>")
+    public void createString(String variable, String format) {
+        String result = replace(format, "%s", () -> RandomStringUtils.randomAlphabetic(1).toLowerCase());
+        result = replace(result, "%S", () -> RandomStringUtils.randomAlphabetic(1).toUpperCase());
+        result = replace(result, "%d", () -> RandomStringUtils.randomNumeric(1));
+        variableStorage.put(variable, result);
+    }
+
+    private String replace(String base, String toReplace, Supplier<String> replacement) {
+        while (base.contains(toReplace)) {
+            base = base.replace(toReplace, replacement.get());
+        }
+        return base;
     }
 
     @Step("Create a string as <variable> with length <length>")
