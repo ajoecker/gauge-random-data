@@ -25,14 +25,24 @@ Based on the `gauge_clear_state_level` environment variable in a gauge project, 
 ```
 * Set <variable> to <value>
 ```
-* Create a unique value (string) of length 8. String contains numbers and characters
+* Create a string of length 8. String contains numbers and characters
 ```
 * Create a string <variable>
 ```
-* Create a unique string of custom length (max 36 characters long). String contains numbers and characters
+* Create a string of custom length (max 36 characters long). String contains numbers and characters
 ```
 * Create a string <variable> with length
 ```
+* Create a string for a certain pattern/foramt
+```
+* Create a string as <variable> in format <format>
+```
+The format can be any string, for which the following replacements are applied
+* `%s` - will be replaced with a lower case alphabetic character
+* `%S` - will be replaced with an upper case alphabetic character
+* `%d` - will be replaced with an one digit integer
+
+for example: `abc%S%S-%d%d` will result in a string like `abcTR-24` or similar
 ## Different Locale
 As the faker library allows to use different locale, one can define the locale to use
 in the gauge project via the environment variable `gauge.data.locale`. The available values are the locale that are
