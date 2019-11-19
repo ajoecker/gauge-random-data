@@ -1,6 +1,6 @@
 package com.github.ajoecker.gauge.random.data;
 
-import org.assertj.core.api.Condition;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -79,14 +79,30 @@ public class RandomDataTest {
         randomData.createString("goo", "%d%d%d");
         assertThat(parseInt(testContainer.get("goo").toString())).isBetween(100, 999);
     }
+
     @Test
     public void formatLowercase() {
         randomData.createString("goo", "%s%s");
-        assertThat(testContainer.get("goo").toString()).matches(i -> i.chars().allMatch(n -> n >= 97 && n <= 122), "all characters must be lowercase");
+        assertLowerCaseWithSize(2);
     }
+
+    private void assertLowerCaseWithSize(int size) {
+        SoftAssertions.assertSoftly(softAssertions -> {
+            String goo = testContainer.get("goo").toString();
+            softAssertions.assertThat(goo).matches(i -> i.chars().allMatch(n -> n >= 97 && n <= 122), "all characters must be lowercase");
+            softAssertions.assertThat(goo).hasSize(size);
+        });
+    }
+
     @Test
     public void formatUppercase() {
         randomData.createString("goo", "%S%S");
         assertThat(testContainer.get("goo").toString()).matches(i -> i.chars().allMatch(n -> n >= 65 && n <= 90), "all characters must be uppercase");
+    }
+
+    @Test
+    public void mixedPattern() {
+        randomData.createString("goo", "%s%s{3}");
+        assertLowerCaseWithSize(4);
     }
 }
