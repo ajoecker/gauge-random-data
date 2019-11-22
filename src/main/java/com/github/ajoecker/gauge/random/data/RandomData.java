@@ -83,6 +83,11 @@ public class RandomData {
         variableStorage.put(variable, UUID.randomUUID().toString().substring(0, correctLength));
     }
 
+    @Step("Create <variable> from file <file>")
+    public void createFromFile(String variable, String fileContent) {
+        variableStorage.put(variable, fileContent);
+    }
+
     @Step("Create a string <variable>")
     public void createUniqueId(String variable) {
         createUniqueId(variable, 8);
