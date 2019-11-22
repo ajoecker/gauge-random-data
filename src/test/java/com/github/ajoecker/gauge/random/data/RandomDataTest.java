@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,8 +26,8 @@ public class RandomDataTest {
             }
 
             @Override
-            public Object get(String key) {
-                return container.get(key);
+            public Optional<Object> get(String key) {
+                return Optional.ofNullable(container.get(key));
             }
         };
         randomData = new RandomData(testContainer);
