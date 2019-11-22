@@ -41,8 +41,15 @@ The format can be any string, for which the following replacements are applied
 * `%s` - will be replaced with a lower case alphabetic character
 * `%S` - will be replaced with an upper case alphabetic character
 * `%d` - will be replaced with an one digit integer
+* `{n}` - is a suffix to any option above, where `n` is replaced with a number and indicates the 
+length of the pattern ahead.
 
-for example: `abc%S%S-%d%d` will result in a string like `abcTR-24` or similar
+for example: 
+
+`abc%S%S-%d%d` will result in a string like `abcTR-24` or similar
+
+`%d{2}%S{2}' will create a string with two digits and two uppercase characters.
+
 ## Different Locale
 As the faker library allows to use different locale, one can define the locale to use
 in the gauge project via the environment variable `gauge.data.locale`. The available values are the locale that are
