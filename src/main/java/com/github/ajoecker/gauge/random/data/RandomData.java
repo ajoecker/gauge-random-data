@@ -85,7 +85,7 @@ public class RandomData {
 
     @Step("Create <variable> from file <file>")
     public void createFromFile(String variable, String fileContent) {
-        variableStorage.put(variable, fileContent.replaceAll("\\R", ""));
+        variableStorage.put(variable, fileContent.replaceAll("\\R", " "));
     }
 
     @Step("Create a string <variable>")

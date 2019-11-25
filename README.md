@@ -48,8 +48,12 @@ for example:
 
 `abc%S%S-%d%d` will result in a string like `abcTR-24` or similar
 
-`%d{2}%S{2}' will create a string with two digits and two uppercase characters.
+`%d{2}%S{2}` will create a string with two digits and two uppercase characters.
 
+* Read in a file and store its content as a string with removed newlines.
+```
+Create <variable> from file <file>
+```
 ## Different Locale
 As the faker library allows to use different locale, one can define the locale to use
 in the gauge project via the environment variable `gauge.data.locale`. The available values are the locale that are
