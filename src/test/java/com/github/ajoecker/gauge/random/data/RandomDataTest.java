@@ -106,4 +106,12 @@ public class RandomDataTest {
         randomData.createString("goo", "%s%s{3}");
         assertLowerCaseWithSize(4);
     }
+
+    @Test
+    public void sum() {
+        testContainer.put("foo", 4.5);
+        testContainer.put("bar", 2);
+        randomData.sum("blub", "foo, bar");
+        assertThat(testContainer.get("blub")).contains(6.5);
+    }
 }

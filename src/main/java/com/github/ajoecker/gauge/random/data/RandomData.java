@@ -5,11 +5,13 @@ import com.google.common.base.Strings;
 import com.thoughtworks.gauge.Step;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.Arrays.stream;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
@@ -111,5 +113,17 @@ public class RandomData {
     @Step("Create an email as <variable>")
     public void setEmail(String variable) {
         variableStorage.put(variable, faker.internet().emailAddress());
+    }
+
+    @Step("Create <sum> as sum of <variables>")
+    public void sum(String sumVariable, String variablesToSum) {
+        double sum = stream(variablesToSum.split(","))
+                .map(String::trim)
+                .map(variableStorage::get)
+                .flatMap(Optional::stream)
+                .map(Object::toString)
+                .mapToDouble(Double::parseDouble)
+                .sum();
+        variableStorage.put(sumVariable, sum);
     }
 }
