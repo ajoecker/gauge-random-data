@@ -19,7 +19,6 @@ public class RandomData {
     private Faker faker;
     private VariableStorage variableStorage;
 
-
     public RandomData() {
         this(VariableStorage.create());
     }
@@ -41,8 +40,7 @@ public class RandomData {
         while (matcher.find()) {
             String type = matcher.group(1);
             String frequency = matcher.group(2);
-            int fAsInt = Integer.parseInt(frequency);
-            String replacement = getReplacement(type, fAsInt);
+            String replacement = getReplacement(type, Integer.parseInt(frequency));
             result = result.replace("%" + type + "{" + frequency + "}", replacement);
         }
         return result;

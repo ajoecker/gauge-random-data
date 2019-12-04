@@ -29,6 +29,10 @@ public class RandomDataTest {
             public Optional<Object> get(String key) {
                 return Optional.ofNullable(container.get(key));
             }
+
+            @Override
+            public void print() {
+            }
         };
         randomData = new RandomData(testContainer);
     }
