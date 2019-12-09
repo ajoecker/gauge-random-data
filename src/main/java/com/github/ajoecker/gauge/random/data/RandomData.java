@@ -3,13 +3,17 @@ package com.github.ajoecker.gauge.random.data;
 import com.github.javafaker.Faker;
 import com.google.common.base.Strings;
 import com.thoughtworks.gauge.Step;
+import org.apache.commons.lang3.time.FastDateParser;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.github.ajoecker.gauge.random.data.DateParser.dateFromPattern;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
@@ -109,5 +113,26 @@ public class RandomData {
     @Step("Create an email as <variable>")
     public void setEmail(String variable) {
         variableStorage.put(variable, faker.internet().emailAddress());
+    }
+
+    @Step("Set date <variable> to today with format <format>")
+    public void createDateToday(String variable, String format) {
+        setDate(variable, format, LocalDate.now());
+    }
+
+    @Step("Set date <variable> to <shift> with format <format>")
+    public void createDate(String variable, String shift, String format) {
+        setDate(variable, format, dateFromPattern(shift));
+    }
+
+    @Step("Set date <variable> to start of month <shift> with format <format>")
+    public void createDateAtStartOfMonth(String variable, String shift, String format) {
+        setDate(variable, format, dateFromPattern(shift).withDayOfMonth(1));
+    }
+
+    private void setDate(String variable, String format, LocalDate localDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        String date = formatter.format(localDate);
+        variableStorage.put(variable, date);
     }
 }
