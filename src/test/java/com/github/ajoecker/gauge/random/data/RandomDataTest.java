@@ -145,4 +145,10 @@ public class RandomDataTest {
         randomData.createDateAtStartOfMonth("foo", "1Y", "YYYY-MM-dd");
         assertThat(testContainer.get("foo")).contains(LocalDate.now().plusYears(1).withDayOfMonth(1).toString());
     }
+
+    @Test
+    public void gmailAdress() {
+        randomData.setGmail("foobar.test", "foo");
+        assertThat(testContainer.get("foo").get().toString()).matches("foobar\\.test\\+.+@gmail\\.com");
+    }
 }

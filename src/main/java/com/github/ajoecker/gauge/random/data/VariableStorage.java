@@ -21,7 +21,7 @@ public interface VariableStorage {
 
     Optional<Object> get(String key);
 
-    static VariableStorage create() {
+    static VariableStorage get() {
         String clearStateLevel = System.getenv("gauge_clear_state_level");
 
         if ("suite".equals(clearStateLevel)) {

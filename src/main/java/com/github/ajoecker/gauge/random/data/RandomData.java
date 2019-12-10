@@ -3,7 +3,7 @@ package com.github.ajoecker.gauge.random.data;
 import com.github.javafaker.Faker;
 import com.google.common.base.Strings;
 import com.thoughtworks.gauge.Step;
-import org.apache.commons.lang3.time.FastDateParser;
+import org.tinylog.Logger;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +24,7 @@ public class RandomData {
     private VariableStorage variableStorage;
 
     public RandomData() {
-        this(VariableStorage.create());
+        this(VariableStorage.get());
     }
 
     public RandomData(VariableStorage variableStorage) {
@@ -81,8 +81,14 @@ public class RandomData {
 
     @Step("Create a string as <variable> with length <length>")
     public void createUniqueId(String variable, int length) {
+        variableStorage.put(variable, uniqueId(length));
+    }
+
+    private String uniqueId(int length) {
         int correctLength = length > MAX_LENGTH ? MAX_LENGTH : length;
-        variableStorage.put(variable, UUID.randomUUID().toString().substring(0, correctLength));
+        String theId = UUID.randomUUID().toString().substring(0, correctLength);
+        Logger.info("created id {}", theId);
+        return theId;
     }
 
     @Step("Create <variable> from file <file>")
@@ -113,6 +119,12 @@ public class RandomData {
     @Step("Create an email as <variable>")
     public void setEmail(String variable) {
         variableStorage.put(variable, faker.internet().emailAddress());
+    }
+
+    @Step("Create a gmail address with prefix <prefix> as <variable>")
+    public void setGmail(String prefix, String variable) {
+        String email = String.format("%s+%s@gmail.com", prefix, uniqueId(8));
+        variableStorage.put(variable, email);
     }
 
     @Step("Set date <variable> to today with format <format>")
