@@ -142,6 +142,11 @@ public class RandomData {
         setDate(variable, format, dateFromPattern(shift).withDayOfMonth(1));
     }
 
+    @Step("Set date <variable> to start of this month with format <format>")
+    public void createDateAtStartOfMonth(String variable, String format) {
+        setDate(variable, format, LocalDate.now().withDayOfMonth(1));
+    }
+
     private void setDate(String variable, String format, LocalDate localDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         String date = formatter.format(localDate);
