@@ -3,13 +3,17 @@ package com.github.ajoecker.gauge.random.data;
 import com.github.javafaker.Faker;
 import com.google.common.base.Strings;
 import com.thoughtworks.gauge.Step;
+import org.tinylog.Logger;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.github.ajoecker.gauge.random.data.DateParser.dateFromPattern;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
@@ -19,9 +23,8 @@ public class RandomData {
     private Faker faker;
     private VariableStorage variableStorage;
 
-
     public RandomData() {
-        this(VariableStorage.create());
+        this(VariableStorage.get());
     }
 
     public RandomData(VariableStorage variableStorage) {
@@ -41,8 +44,7 @@ public class RandomData {
         while (matcher.find()) {
             String type = matcher.group(1);
             String frequency = matcher.group(2);
-            int fAsInt = Integer.parseInt(frequency);
-            String replacement = getReplacement(type, fAsInt);
+            String replacement = getReplacement(type, Integer.parseInt(frequency));
             result = result.replace("%" + type + "{" + frequency + "}", replacement);
         }
         return result;
@@ -79,8 +81,14 @@ public class RandomData {
 
     @Step("Create a string as <variable> with length <length>")
     public void createUniqueId(String variable, int length) {
+        variableStorage.put(variable, uniqueId(length));
+    }
+
+    private String uniqueId(int length) {
         int correctLength = length > MAX_LENGTH ? MAX_LENGTH : length;
-        variableStorage.put(variable, UUID.randomUUID().toString().substring(0, correctLength));
+        String theId = UUID.randomUUID().toString().substring(0, correctLength);
+        Logger.info("created id {}", theId);
+        return theId;
     }
 
     @Step("Create <variable> from file <file>")
@@ -111,5 +119,37 @@ public class RandomData {
     @Step("Create an email as <variable>")
     public void setEmail(String variable) {
         variableStorage.put(variable, faker.internet().emailAddress());
+    }
+
+    @Step("Create a gmail address with prefix <prefix> as <variable>")
+    public void setGmail(String prefix, String variable) {
+        String email = String.format("%s+%s@gmail.com", prefix, uniqueId(8));
+        variableStorage.put(variable, email);
+    }
+
+    @Step("Set date <variable> to today with format <format>")
+    public void createDateToday(String variable, String format) {
+        setDate(variable, format, LocalDate.now());
+    }
+
+    @Step("Set date <variable> to <shift> with format <format>")
+    public void createDate(String variable, String shift, String format) {
+        setDate(variable, format, dateFromPattern(shift));
+    }
+
+    @Step("Set date <variable> to start of month <shift> with format <format>")
+    public void createDateAtStartOfMonth(String variable, String shift, String format) {
+        setDate(variable, format, dateFromPattern(shift).withDayOfMonth(1));
+    }
+
+    @Step("Set date <variable> to start of this month with format <format>")
+    public void createDateAtStartOfMonth(String variable, String format) {
+        setDate(variable, format, LocalDate.now().withDayOfMonth(1));
+    }
+
+    private void setDate(String variable, String format, LocalDate localDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        String date = formatter.format(localDate);
+        variableStorage.put(variable, date);
     }
 }
