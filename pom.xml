@@ -6,7 +6,7 @@
 
     <groupId>com.github.ajoecker</groupId>
     <artifactId>gauge-random-data</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.2.1</version>
     <name>Random data for gauge projects</name>
     <description>Provides steps to generate random data based on the faker library</description>
     <url>https://github.com/ajoecker/gauge-random-data</url>
