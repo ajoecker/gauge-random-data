@@ -148,6 +148,11 @@ public class RandomData {
         setDate(variable, format, LocalDate.now().withDayOfMonth(1));
     }
 
+    @Step("Set date <variable> to start of next month with format <format>")
+    public void createDateAtStartOfNextMonth(String variable, String format) {
+        setDate(variable, format, LocalDate.now().plusMonths(1).withDayOfMonth(1));
+    }
+
     public String shiftDate(String shift, String format) {
         return ofPattern(format).format(dateFromPattern(shift));
     }
