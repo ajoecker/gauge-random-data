@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.github.ajoecker.gauge.random.data.DateParser.dateFromPattern;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
@@ -147,9 +148,16 @@ public class RandomData {
         setDate(variable, format, LocalDate.now().withDayOfMonth(1));
     }
 
+    @Step("Set date <variable> to start of next month with format <format>")
+    public void createDateAtStartOfNextMonth(String variable, String format) {
+        setDate(variable, format, LocalDate.now().plusMonths(1).withDayOfMonth(1));
+    }
+
+    public String shiftDate(String shift, String format) {
+        return ofPattern(format).format(dateFromPattern(shift));
+    }
+
     private void setDate(String variable, String format, LocalDate localDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-        String date = formatter.format(localDate);
-        variableStorage.put(variable, date);
+        variableStorage.put(variable, ofPattern(format).format(localDate));
     }
 }
